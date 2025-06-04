@@ -1,0 +1,60 @@
+-- 
+-- Roll no: 59
+-- Name: Vaishnavi k
+-- Program: Assignment - II
+-- 
+
+--
+-- Table structure for table <table_name>
+--
+
+-- ---------create/alter statement commands----------- # This line may be removed in the actual file
+
+--
+-- Dumping data for table <table_name>
+--
+
+-- --------insert/update statement commands----------- # This line may be removed in the actcual file
+
+--
+-- SQl Query Statements
+--
+
+-- 1
+select name, address from members;
+
+-- 2
+select accno, title from books where title like '%o%';
+
+-- 3
+select * from books where type = 'lending' and availability = 'yes';
+
+-- 4
+select b.title, b.author, p.name from books b join publishers p on b.publisherid = p.publisherid;
+
+-- 5
+select m.name, m.address, b.title from members m join issues i on m.memberid = i.memberid join books b on i.accno = b.accno order by b.title asc;
+
+-- 6
+select m.name, count(i.accno) as totalbooksissued from members m left join issues i on m.memberid = i.memberid group by m.name;
+
+-- 7
+select m.name, m.address from members m left join issues i on m.memberid = i.memberid where i.issueid is null;
+
+-- 8
+select b.title, b.author, count(i.accno) as numberofissue from books b left join issues i on b.accno = i.accno group by b.title, b.author;
+
+-- 9
+select m.name, count(i.accno) as totalbooksissued from members m join issues i on m.memberid = i.memberid group by m.name having count(i.accno) > 2;
+
+-- 10
+select b.title, b.author from books b left join issues i on b.accno = i.accno where i.issueid is null;
+
+-- 11
+select b.title, b.author, count(i.accno) as totalissued from books b join issues i on b.accno = i.accno group by b.title, b.author order by totalissued desc limit 5;
+
+-- 12
+select b.title, b.author, count(i.accno) as totalissued from books b join issues i on b.accno = i.accno group by b.title, b.author order by totalissued desc limit 1;
+
+-- 13
+select m.name, i.issuedate from members m join issues i on m.memberid = i.memberid left join returns r on i.accno = r.accno and i.memberid = r.memberid where i.issuedate < '2023-06-01' and r.returnid is null;
