@@ -1,0 +1,71 @@
+-- 
+-- Roll No: 59
+-- Name: Vaishnavi k
+-- Program: Assignment III
+-- 
+
+
+
+
+Q1.
+Create a MySQL view named "IssuedBooksDetails" that combines information about issued books, including the book title, member name, and issue date. Include columns for book title, member name, and issue date.
+
+Ans:
+
+create view IssuedBooksDetails as select b.title,m.name,i.issuedate from members m join issues i on m.memberid = i.memberid join books b on i.accno=b.accno;
+
+Q2.
+Create a stored function in MySQL that calculates and returns the total fine amount for a given member based on their memberid.
+
+Ans:
+
+delimiter //
+create function TotalFine(memid int) returns int reads sql data begin declare finee int; select sum(fine) into finee from returns where memberid=memid; return
+finee; end//
+delimiter ;
+
+Q3.
+Create a MySQL stored procedure named "AddIssue" to facilitate issuing a book to a member. The procedure should take input parameters for the accession number of the book and the member ID of the member. It should insert to the Issues table with the new issue record, including the current date as the issue date. Use the built-in function CURDATE() to get the current date.
+
+Ans:
+
+delimiter //
+create procedure Addissue(IN accno int,IN memberid int) begin insert into issues(memberid,accno,issuedate,duedate) values (memberid,accno,curdate(),curdate()+interval 30 day); end//
+delimiter ;
+
+Q4.
+Create a stored procedure 'IsAvailable' which takes an accession number of a book as input and outputs a boolean value (TRUE/FALSE) on the availability of that book.
+
+Ans:
+
+delimiter //
+create procedure IsAvailable(IN acc int,OUT isTaken boolean) begin declare available varchar(3); select availability into available from books where accno=acc; set isTaken=IF(available='yes',TRUE,FALSE); end//
+delimiter ;
+
+
+Q5.
+Create a MySQL trigger named 'UpdateAvailabilityToNo' to update the availability of a book to "no" once that books is issued to some member.
+
+Ans:
+delimiter //
+create trigger UpdateAvailabilityToNo
+after insert on issues
+for each row
+begin
+update books set availability='no' where accno=new.accno;
+end//
+delimiter ;
+
+
+Q6.
+Create a MySQL trigger named 'UpdateAvailabilityToYes' to update the availability of a book to "yes" once that books is returned to library.
+
+Ans:
+delimiter //
+create trigger UpdateAvailabilityToYes
+after insert on returns
+for each row
+begin
+update books set availability='yes' where accno=new.accno;
+end//
+delimiter ;
